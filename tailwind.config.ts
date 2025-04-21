@@ -61,6 +61,13 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				// UP2YOU custom colors
+				up2you: {
+					coral: '#FF6B4A',
+					teal: '#264653',
+					darkGray: '#3A3A3A',
+					white: '#FFFFFF'
 				}
 			},
 			borderRadius: {

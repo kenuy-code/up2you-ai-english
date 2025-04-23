@@ -4,25 +4,59 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Send } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 export const ChatSection = () => {
   const [messages, setMessages] = useState<Array<{role: 'user' | 'assistant', content: string}>>([]);
   const [input, setInput] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!input.trim()) return;
+    if (!input.trim() || isLoading) return;
 
     const newMessage = { role: 'user' as const, content: input };
     setMessages(prev => [...prev, newMessage]);
     setInput("");
+    setIsLoading(true);
 
-    // TODO: Integrate with GPT-4 through Supabase Edge Function
-    const assistantMessage = { 
-      role: 'assistant' as const, 
-      content: "Esta é uma mensagem de placeholder. A integração com GPT-4 será implementada através do Supabase Edge Functions."
-    };
-    setMessages(prev => [...prev, assistantMessage]);
+    try {
+      const response = await fetch(
+        'https://YOUR_SUPABASE_PROJECT.supabase.co/functions/v1/chat-gpt',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${process.env.SUPABASE_ANON_KEY}`,
+          },
+          body: JSON.stringify({
+            message: input,
+            context: "Você é um professor de inglês experiente e amigável. Ajude o aluno a aprender inglês de forma natural e efetiva."
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error('Falha na comunicação com o assistente');
+      }
+
+      const data = await response.json();
+      const assistantMessage = { 
+        role: 'assistant' as const, 
+        content: data.message
+      };
+      setMessages(prev => [...prev, assistantMessage]);
+    } catch (error) {
+      toast({
+        title: "Erro",
+        description: "Não foi possível enviar sua mensagem. Por favor, tente novamente.",
+        variant: "destructive",
+      });
+      console.error('Error:', error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -59,8 +93,9 @@ export const ChatSection = () => {
           onChange={(e) => setInput(e.target.value)}
           placeholder="Digite sua mensagem..."
           className="flex-grow"
+          disabled={isLoading}
         />
-        <Button type="submit" size="icon">
+        <Button type="submit" size="icon" disabled={isLoading}>
           <Send className="h-4 w-4" />
         </Button>
       </form>

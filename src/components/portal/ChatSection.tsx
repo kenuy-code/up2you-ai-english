@@ -4,13 +4,11 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Send } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
 
 export const ChatSection = () => {
   const [messages, setMessages] = useState<Array<{role: 'user' | 'assistant', content: string}>>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -21,42 +19,24 @@ export const ChatSection = () => {
     setInput("");
     setIsLoading(true);
 
-    try {
-      const response = await fetch(
-        'https://YOUR_SUPABASE_PROJECT.supabase.co/functions/v1/chat-gpt',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${process.env.SUPABASE_ANON_KEY}`,
-          },
-          body: JSON.stringify({
-            message: input,
-            context: "Você é um professor de inglês experiente e amigável. Ajude o aluno a aprender inglês de forma natural e efetiva."
-          }),
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error('Falha na comunicação com o assistente');
-      }
-
-      const data = await response.json();
+    // Simulated assistant response
+    setTimeout(() => {
+      const responses = [
+        "Can you practice this sentence: 'I enjoy learning English!'",
+        "Great question! In English, we usually say it this way...",
+        "Let's practice some vocabulary. What words do you know about...",
+        "That's correct! Here's another example you can try...",
+        "Would you like to practice pronunciation? Repeat after me...",
+      ];
+      const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+      
       const assistantMessage = { 
         role: 'assistant' as const, 
-        content: data.message
+        content: randomResponse
       };
       setMessages(prev => [...prev, assistantMessage]);
-    } catch (error) {
-      toast({
-        title: "Erro",
-        description: "Não foi possível enviar sua mensagem. Por favor, tente novamente.",
-        variant: "destructive",
-      });
-      console.error('Error:', error);
-    } finally {
       setIsLoading(false);
-    }
+    }, 1000);
   };
 
   return (

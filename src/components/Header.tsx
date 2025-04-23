@@ -22,6 +22,7 @@ export const Header = () => {
         {/* Desktop Menu */}
         <nav className="hidden md:flex items-center space-x-8">
           <Link to="/" className="text-up2you-darkGray hover:text-up2you-coral transition-colors">Home</Link>
+          <Link to="/portal" className="text-up2you-darkGray hover:text-up2you-coral transition-colors">Portal do Aluno</Link>
           <Link to="/como-funciona" className="text-up2you-darkGray hover:text-up2you-coral transition-colors">Como Funciona</Link>
           <Link to="/precos" className="text-up2you-darkGray hover:text-up2you-coral transition-colors">Preços</Link>
           <Link to="/sobre" className="text-up2you-darkGray hover:text-up2you-coral transition-colors">Sobre Nós</Link>
@@ -53,6 +54,7 @@ export const Header = () => {
         <div className="md:hidden bg-white border-t shadow-lg">
           <div className="container mx-auto px-4 py-2 space-y-2">
             <Link to="/" className="block py-2 text-up2you-darkGray hover:text-up2you-coral">Home</Link>
+            <Link to="/portal" className="block py-2 text-up2you-darkGray hover:text-up2you-coral">Portal do Aluno</Link>
             <Link to="/como-funciona" className="block py-2 text-up2you-darkGray hover:text-up2you-coral">Como Funciona</Link>
             <Link to="/precos" className="block py-2 text-up2you-darkGray hover:text-up2you-coral">Preços</Link>
             <Link to="/sobre" className="block py-2 text-up2you-darkGray hover:text-up2you-coral">Sobre Nós</Link>
